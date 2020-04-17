@@ -14,6 +14,7 @@ public class Wall extends Tile {
 	private static final Color border = new Color(0x131211ff);
 	
 	private static Texture template = new Texture(Gdx.files.internal("images/tiles/wall.png"));
+	private static Texture light    = new Texture(Gdx.files.internal("images/tiles/wall.light.png"));
 	private static Texture[] textures = new Texture[16];
 	private static boolean texturesGenerated = false;
 	

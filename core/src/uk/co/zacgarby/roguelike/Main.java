@@ -4,7 +4,9 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import uk.co.zacgarby.roguelike.world.Generator;
 import uk.co.zacgarby.roguelike.world.Level;
@@ -13,12 +15,19 @@ public class Main extends ApplicationAdapter {
 	public static Player player;
 	public static Level level;
 	public static int camX, camY;
+	public Pixmap lightMap;
 	
 	public SpriteBatch batch;
+	public SpriteBatch lightbatch;
 	
 	@Override
 	public void create () {		
-		batch = new SpriteBatch();
+		final String FRAGMENT = Gdx.files.internal("shaders/shadow.frag").readString();
+		final String VERTEX = Gdx.files.internal("shaders/shadow.vert").readString();
+		ShaderProgram program = new ShaderProgram(VERTEX, FRAGMENT);
+		
+		lightbatch = new SpriteBatch(8191);
+		batch = new SpriteBatch(8191, program);
 		
 		player = new Player("møøse");
 		
@@ -36,6 +45,8 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		
 
 		update();
 		

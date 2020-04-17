@@ -10,6 +10,8 @@ import uk.co.zacgarby.roguelike.world.Tile;
 public class Ground extends Tile {
 	private static Texture normal = new Texture(Gdx.files.internal("images/tiles/ground.png"));
 	private static Texture grassy = new Texture(Gdx.files.internal("images/tiles/grassy-ground.png"));
+	private static Texture light  = new Texture(Gdx.files.internal("images/tiles/ground.light.png"));
+	
 	private boolean isGrassy;
 	private Texture tex;
 	
