@@ -7,6 +7,7 @@ attribute vec2 a_texCoord0;
 // Data sent from libgdx SpriteBatch
 //(Read Only and the same for all vertex|pixel)
 uniform mat4 u_projTrans;
+uniform vec2 u_resolution;
 
 // Variable Data for storing data to pass to fragment Shader
 varying vec4 v_color;

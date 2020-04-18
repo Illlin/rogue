@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 
 import uk.co.zacgarby.roguelike.world.Generator;
 import uk.co.zacgarby.roguelike.world.Level;
+
 
 public class Main extends ApplicationAdapter {
 	public static Player player;
@@ -19,15 +21,26 @@ public class Main extends ApplicationAdapter {
 	
 	public SpriteBatch batch;
 	public SpriteBatch lightbatch;
+	//public ShaderProgram shader;
 	
 	@Override
 	public void create () {		
+		//ShaderProgram.pedantic = false;
 		final String FRAGMENT = Gdx.files.internal("shaders/shadow.frag").readString();
 		final String VERTEX = Gdx.files.internal("shaders/shadow.vert").readString();
-		ShaderProgram program = new ShaderProgram(VERTEX, FRAGMENT);
+		ShaderProgram shader = new ShaderProgram(VERTEX, FRAGMENT);
+
+		
+		if (!shader.isCompiled()) {
+			System.err.println(shader.getLog());
+			System.exit(0);
+		}
+		if (shader.getLog().length()!=0)
+			System.out.println(shader.getLog());
 		
 		lightbatch = new SpriteBatch(8191);
-		batch = new SpriteBatch(8191, program);
+		batch = new SpriteBatch(8191, shader);
+		batch.setShader(shader);
 		
 		player = new Player("møøse");
 		
@@ -49,11 +62,31 @@ public class Main extends ApplicationAdapter {
 		
 
 		update();
+		ShaderProgram shader = batch.getShader();
+		
+		
+		//System.out.println(shader.getFragmentShaderSource());
+		//shader.begin();
+		//shader.setUniformf("resolution", new Vector2(screenSizeX(), screenSizeY()));
+		//shader.end();
+		
+		shader.begin();
+		shader.setUniformf("u_resolution", new Vector2(screenSizeX(), screenSizeY()));
+		shader.end();
+
+
 		
 		batch.begin();
 		level.draw(batch, camX, camY);
 		Sidebar.draw(batch);
 		batch.end();
+	}
+	
+	public float screenSizeX() {
+		return Gdx.graphics.getWidth()  - Sidebar.background.getWidth()*4;
+	}
+	public float screenSizeY() {
+		return Gdx.graphics.getHeight();
 	}
 	
 	private void update() {
