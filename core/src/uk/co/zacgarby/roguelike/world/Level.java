@@ -35,6 +35,20 @@ public class Level {
 		}
 	}
 	
+	public void drawlight(SpriteBatch batch, int camX, int camY) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				int sx = -camX + i * 10;
+				int sy = -camY + j * 10;
+				if (sx < -10 || sx > 180 || sy < -10 || sy > 210) {
+					continue;
+				}
+				
+				tiles[j][i].drawlight(batch, sx, sy);
+			}
+		}
+	}
+	
 	public Tile at(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return null;

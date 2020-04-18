@@ -28,6 +28,11 @@ public class Ground extends Tile {
 	}
 	
 	@Override
+	public void drawlight(SpriteBatch batch, int x, int y) {
+		batch.draw(light, x, y);
+	}
+	
+	@Override
 	public void initialise(Level level) {
 		tex = isGrassy ? grassy : normal;
 	}

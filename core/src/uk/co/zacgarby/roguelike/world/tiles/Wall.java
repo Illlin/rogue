@@ -36,6 +36,11 @@ public class Wall extends Tile {
 	}
 	
 	@Override
+	public void drawlight(SpriteBatch batch, int sx, int sy) {		
+		batch.draw(light, sx, sy);
+	}
+	
+	@Override
 	public void initialise(Level level) {
 		int ti = 0;
 		ti |= (level.at(x, y-1) instanceof Wall ? 1 : 0) << 0;
