@@ -12,13 +12,13 @@ uniform sampler2D u_lightmap;
 uniform vec2 u_resolution;
 
 vec3 screencol(in vec3 current, in vec2 pixpos){
-	vec4 pixcol = texture2D(u_lightmap, pixpos);
+	vec4 pixcol = texture2D(u_lightmap, pixpos);//pixpos - gl_FragCoord.xy);
 	//return (current)*pixcol.y; //* (pixcol.xyz * (pixcol.w)));
 	//return pixcol.yyy;
 	if (pixcol.x < 0.15){
 		return vec3(0.,0.,0.);
 	} else {
-		return current;
+		return current * vec3(0.99,0.99,0.99);
 	}
 }
 
@@ -55,6 +55,7 @@ vec3 draw_line(in vec2 start, in vec2 end, in vec3 lightcolour) {
 		y += yinc;
 		if (texture(u_lightmap, vec2(x, y)).x < 0.15) {
 			return vec3(0.,0.,1.);
+
 		}
 	}
 	
@@ -71,7 +72,7 @@ void main()
 {
 	vec2 cam = u_resolution*0.5;
 
-	vec4 light1col = vec4(1.,0.,1.,1);
+	vec4 light1col = vec4(1.,1.,1.,1);
 	vec2 light1pos = u_resolution*0.5;
 
 	// set the colour for this fragment|pixel
