@@ -22,73 +22,44 @@ vec3 screencol(in vec3 current, in vec2 pixpos){
 	}
 }
 
+double myabs(double x) {
+	if (x < 0) return -x;
+	else return x;
+}
+
 vec3 draw_line(in vec2 start, in vec2 end, in vec3 lightcolour) {
-	vec3 runningcolour = vec3(lightcolour.xyz);
-	int x1 = int(round(start.x));
-	int x2 = int(round(end.x));
-	int y1 = int(round(start.y));
-	int y2 = int(round(end.y));
-
-	int dx, dy, i, e;
-	int incx, incy, inc1, inc2;
-	int x,y;
-
-	dx = x2-x1;
-	dy = y2-y1;
-
-	if (dx < 0) dx = -dx;
-	if (dy < 0) dy = -dy;
-	incx = 1;
-	if (x2 < x1) incx = -1;
-	incy = 1;
-	if (y2 < y1) incy = -1;
-	x = x1; y = y1;
-	if (dx > dy) {
-		runningcolour = screencol(runningcolour, vec2(x, y));
-		if (runningcolour == vec3(0.,0.,0.)){
-			return vec3(0.,0.,0.);
-		}
-		e = 2 * dy-dx;
-		inc1 = 2*(dy-dx);
-		inc2 = 2*dy;
-		for (i=0; i<dx; i++) {
-			if (e >= 0) {
-				y += incy;
-				e += inc1;
-			}
-			else
-				e += inc2;
-			x += incx;
-
-			runningcolour = screencol(runningcolour, vec2(x, y));
-			if (runningcolour == vec3(0.,0.,0.)){
-				return vec3(0.,0.,0.);
-			}
-		}
-
+	double x1 = round(start.x);
+	double x2 = round(end.x);
+	double y1 = round(start.y);
+	double y2 = round(end.x);
+	
+	double dx = x2 - x1;
+	double dy = y2 - y1;
+	double xinc, yinc;
+	
+	double x = x1, y = y1;
+	
+	int steps;
+	
+	if (myabs(dx) > myabs(dy)) {
+		steps = int(round(myabs(dx)));
 	} else {
-		runningcolour = screencol(runningcolour, vec2(x, y));
-		if (runningcolour == vec3(0.,0.,0.)){
-			return vec3(0.,0.,0.);
-		}
-		e = 2*dx-dy;
-		inc1 = 2*(dx-dy);
-		inc2 = 2*dx;
-		for (i=0; i<dy; i++) {
-			if (e >= 0) {
-				x += incx;
-				e += inc1;
-			}
-			else
-				e += inc2;
-			y += incy;
-			runningcolour = screencol(runningcolour, vec2(x, y));
-			if (runningcolour == vec3(0.,0.,0.)){
-				return vec3(0.,0.,0.);
-			}
+		steps = int(round(myabs(dy)));
+	}
+	
+	xinc = dx / double(steps);
+	yinc = dy / double(steps);
+	
+	for (int v = 0; v < steps; v++) {
+		x += xinc;
+		y += yinc;
+		if (texture(u_lightmap, vec2(x, y)).x < 0.15) {
+			return vec3(0.,0.,1.);
+
 		}
 	}
-	return runningcolour;
+	
+	return vec3(1.,1.,0.);
 }
 
 vec4 getlight(in vec2 lightpos, in vec2 endpos, in vec4 lightcol){
@@ -114,6 +85,7 @@ void main()
 		//gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * getlight(light1pos, gl_FragCoord.xy, light1col);
 
 		gl_FragColor = getlight(light1pos, gl_FragCoord.xy, light1col);
+		//gl_FragColor = vec4(0.,0.,0.,1.);
 
 		//vec4(light,light,light,1.) * lightcol * texture2D(u_lightmap, v_texCoords);
 		//runCast(in vec2 start, in vec2 end, in vec3 lightcolour)

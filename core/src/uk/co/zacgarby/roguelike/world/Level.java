@@ -40,7 +40,7 @@ public class Level {
 			for (int j = 0; j < height; j++) {
 				int sx = -camX + i * 10;
 				int sy = -camY + j * 10;
-				if (sx < -10 || sx > 180 || sy < -10 || sy > 210) {
+				if (sx < 0 || sx >= 170 || sy < 0 || sy >= 200) {
 					continue;
 				}
 				
